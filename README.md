@@ -11,8 +11,8 @@ A Spring Boot REST API for managing playgrounds, attractions, and kids. The API 
 - Interactive API documentation with Swagger UI
 
 ## Installation
-   mvn clean install
-   run PlayGroundsApplication.java
+ -   mvn clean install
+ -   run PlayGroundsApplication.java
 
 The API will be available at `http://localhost:8080`.
 
@@ -29,6 +29,7 @@ Interactive API documentation is available via Swagger UI.
 |--------|------------------------------------------|---------------------------------------------|
 | POST   | `/api/v1/playsites`                      | Create a new playground                     |
 | GET    | `/api/v1/playsites/{id}`                 | Get playground details by ID                |
+| PUT    | `/api/v1/playsites/{id}`                 | Edit playground details by ID               |
 | DELETE | `/api/v1/playsites/{id}`                 | Delete a playground by ID                   |
 | POST   | `/api/v1/playsites/{id}/kids`            | Add a kid to a playground                   |
 | DELETE | `/api/v1/playsites/{id}/kids/{ticket}`   | Remove a kid from a playground by ticket    |
