@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PlayGroundController.class)
@@ -48,6 +49,27 @@ class PlayGroundControllerTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Fun Park"));
+    }
+
+    @Test
+    void update_returnsUpdatedPlaySite() throws Exception {
+        UUID id = UUID.randomUUID();
+        PlayGroundRequest req = new PlayGroundRequest(
+                "Updated Park",
+                List.of(new AttractionRequest(Attraction.Type.CAROUSEL, 3))
+        );
+        PlaySite updatedSite = new PlaySite("Updated Park", List.of(new Attraction(Attraction.Type.CAROUSEL, 3)));
+        Mockito.when(playGroundService.updatePlayGround(eq(id), any())).thenReturn(updatedSite);
+
+        mockMvc.perform(
+                        put("/api/v1/playsites/" + id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(req))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Park"))
+                .andExpect(jsonPath("$.attractions[0].type").value("CAROUSEL"))
+                .andExpect(jsonPath("$.attractions[0].capacity").value(3));
     }
 
     @Test

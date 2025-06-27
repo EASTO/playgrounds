@@ -15,13 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PlayGroundServiceTest {
@@ -44,6 +44,58 @@ public class PlayGroundServiceTest {
         verify(repository).save(captor.capture());
         assertEquals("Fun Park", captor.getValue().getName());
         assertNotNull(result);
+    }
+
+    @Test
+    void updatePlayGround_updatesNameAndAttractionsAndResetsKidsAndQueue() {
+        when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        PlaySite old = service.createPlayGround(new PlayGroundRequest("Old Name", List.of(new AttractionRequest(Attraction.Type.SLIDE, 1))));
+        when(repository.findById(old.getId())).thenReturn(Optional.of(old));
+        service.addKid(old.getId(), new KidRequest("Alice", 7, "T1", true));
+        service.addKid(old.getId(), new KidRequest("Tom", 8, "T2", true));
+
+        PlayGroundRequest req = new PlayGroundRequest(
+                "New Name",
+                List.of(new AttractionRequest(Attraction.Type.CAROUSEL, 3))
+        );
+
+        PlaySite updated = service.updatePlayGround(old.getId(), req);
+
+        assertEquals("New Name", updated.getName());
+        assertEquals(1, updated.getAttractions().size());
+        assertEquals(Attraction.Type.CAROUSEL, updated.getAttractions().get(0).type());
+        assertEquals(3, updated.getAttractions().get(0).capacity());
+        assertTrue(updated.getKids().isEmpty());
+        assertTrue(updated.getQueue().isEmpty());
+    }
+
+    @Test
+    void updatePlayGround_throwsIfNotFound() {
+        UUID unknownId = UUID.randomUUID();
+        when(repository.findById(unknownId)).thenReturn(Optional.empty());
+        PlayGroundRequest req = new PlayGroundRequest("X", List.of(new AttractionRequest(Attraction.Type.SLIDE, 1)));
+        assertThrows(NoSuchElementException.class, () -> service.updatePlayGround(unknownId, req));
+    }
+
+    @Test
+    void updatePlayGround_savesUpdatedPlaySite() {
+        when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        PlaySite old = service.createPlayGround(new PlayGroundRequest("Old Name", List.of(new AttractionRequest(Attraction.Type.SLIDE, 1))));
+        when(repository.findById(old.getId())).thenReturn(Optional.of(old));
+
+        PlayGroundRequest req = new PlayGroundRequest(
+                "New Name",
+                List.of(new AttractionRequest(Attraction.Type.BALL_PIT, 2))
+        );
+
+        service.updatePlayGround(old.getId(), req);
+
+        ArgumentCaptor<PlaySite> captor = ArgumentCaptor.forClass(PlaySite.class);
+        verify(repository, times(2)).save(captor.capture());
+        assertEquals("New Name", captor.getValue().getName());
+        assertEquals(Attraction.Type.BALL_PIT, captor.getValue().getAttractions().get(0).type());
     }
 
     @Test

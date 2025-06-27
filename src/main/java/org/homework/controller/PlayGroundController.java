@@ -29,6 +29,11 @@ public class PlayGroundController {
         return playGroundService.getPlayGround(id).orElseThrow();
     }
 
+    @PutMapping("/{id}")
+    public PlaySite update(@PathVariable UUID id, @RequestBody @Valid PlayGroundRequest request) {
+        return playGroundService.updatePlayGround(id, request);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable UUID id) {
         playGroundService.deletePlayGround(id);

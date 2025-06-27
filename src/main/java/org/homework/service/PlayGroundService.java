@@ -30,6 +30,22 @@ public class PlayGroundService {
         return playGroundRepository.findById(id);
     }
 
+    public PlaySite updatePlayGround(UUID id, PlayGroundRequest playGroundRequest) {
+        PlaySite existing = playGroundRepository.findById(id).orElseThrow();
+        update(playGroundRequest, existing);
+        return playGroundRepository.save(existing);
+    }
+
+    private void update(PlayGroundRequest playGroundRequest, PlaySite existing) {
+        List<Attraction> attractions = new ArrayList<>();
+        playGroundRequest.attractions().forEach(a -> attractions.add(new Attraction(a.type(), a.capacity())));
+        existing.setName(playGroundRequest.name());
+        existing.getKids().clear();
+        existing.getQueue().clear();
+        existing.getAttractions().clear();
+        existing.getAttractions().addAll(attractions);
+    }
+
     public void deletePlayGround(UUID id) {
         playGroundRepository.delete(id);
     }
