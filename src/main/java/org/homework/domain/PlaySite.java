@@ -26,7 +26,11 @@ public class PlaySite {
     }
 
     public int getUtilization() {
-        return (int) ((kids.size() * 100.0) / getCapacity());
+        int capacity = getCapacity();
+        if (capacity == 0) {
+            return 0;
+        }
+        return (int) ((kids.size() * 100.0) / capacity);
     }
 
     public boolean addKid(Kid kid, boolean acceptQueue) {

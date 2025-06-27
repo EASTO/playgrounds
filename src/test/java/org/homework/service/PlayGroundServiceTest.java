@@ -3,7 +3,7 @@ package org.homework.service;
 import org.homework.domain.Attraction;
 import org.homework.domain.Kid;
 import org.homework.domain.PlaySite;
-import org.homework.repository.PlayGroundRepository;
+import org.homework.repository.IPlayGroundRepository;
 import org.homework.request.AttractionRequest;
 import org.homework.request.KidRequest;
 import org.homework.request.PlayGroundRequest;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class PlayGroundServiceTest {
 
     @Mock
-    PlayGroundRepository repository;
+    IPlayGroundRepository repository;
     @InjectMocks
     PlayGroundService service;
 

@@ -3,6 +3,7 @@ package org.homework.service;
 import org.homework.domain.Attraction;
 import org.homework.domain.Kid;
 import org.homework.domain.PlaySite;
+import org.homework.repository.IPlayGroundRepository;
 import org.homework.repository.PlayGroundRepository;
 import org.homework.request.KidRequest;
 import org.homework.request.PlayGroundRequest;
@@ -13,9 +14,9 @@ import java.util.*;
 @Service
 public class PlayGroundService {
 
-    private final PlayGroundRepository playGroundRepository;
+    private final IPlayGroundRepository playGroundRepository;
 
-    public PlayGroundService(PlayGroundRepository playGroundRepository) {
+    public PlayGroundService(IPlayGroundRepository playGroundRepository) {
         this.playGroundRepository = playGroundRepository;
     }
 
