@@ -12,7 +12,7 @@ A Spring Boot REST API for managing playgrounds, attractions, and kids. The API 
 
 ## Installation
    mvn clean install
-   run [PlayGroundsApplication.java] or mvn spring-boot:run
+   run PlayGroundsApplication.java
 
 The API will be available at `http://localhost:8080`.
 

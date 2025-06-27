@@ -9,7 +9,6 @@ public class PlaySite {
     private final UUID id;
     private final String name;
     private List<Attraction> attractions;
-    //incapsulate
     private Set<Kid> kids = new HashSet<>();
     private Queue<Kid> queue = new LinkedList<>();
     private int totalVisitorsToday = 0;
